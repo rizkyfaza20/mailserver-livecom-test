@@ -16,11 +16,6 @@ sed -i " s/<replace-with-setup-password-hash>/${HASHED_SETUP_PASSWORD}/;  s/<rep
   /files/config.local.php \
   /files/initialize-database.sql
 
-if [ ! -f "/www/postfixadmin/config.local.php" ]; then
-  echo "It doesn't seem like the postfixadmin is configured, so copying the config file now"
-  cp /files/config.local.php /www/postfixadmin
-fi
-
 if [ ! -d "/var/log/nginx" ]; then
   mkdir -p /var/log/nginx
   chown www-data:www-data /var/log/nginx
@@ -84,6 +79,7 @@ fi
 service php7.2-fpm start
 service nginx start
 service postfix start
+service dovecot start
 service rsyslog start
 service spamassassin start
 service opendkim start
@@ -95,3 +91,4 @@ if [ ! -f "/data/ssl/private/dh.param" ]; then
   chown 0440 /data/ssl/private/dh.param
 fi
 /usr/sbin/dovecot -F
+

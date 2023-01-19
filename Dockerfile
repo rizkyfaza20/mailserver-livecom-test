@@ -1,7 +1,5 @@
 FROM ubuntu:bionic
 
-LABEL maintainer="Andrey Mikhalchuk <andrey@mikhalchuk.com>"
-
 ENV DEBIAN_FRONTEND=noninteractive \
     VERSION_POSTFIXADMIN=3.3.8 \
     VERSION_DOVECOT=2.3.19.1
@@ -89,6 +87,6 @@ RUN chmod +x /start.sh
 # 993 - IMAP over SSL
 # 995 - POP3 over SSL
 VOLUME [ "/var/log/", "/var/vmail/", "/var/lib/mysql", "/data/ssl" ]
-EXPOSE 25 80 110 143 465 993 995
+EXPOSE 25 110 143 465 993 995 8092 2425
 
 CMD ["/start.sh"]

@@ -147,5 +147,5 @@ FROM mailbox WHERE username = '%u' AND active = '1'
 #iterate_query = SELECT username AS user FROM users
 
 driver = mysql
-connect = host=<replace-this-db-host> dbname=mail user=admin password=<replace-this-db-password>
+connect = host=localhost dbname=mail user=admin password=Welcome1234
 default_pass_scheme = CRAM-MD5

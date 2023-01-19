@@ -1,6 +1,6 @@
 user=admin
-password=<replace-this-db-password>
-hosts=<replace-this-db-host>
+password=Welcome1234
+hosts=localhost
 dbname=mail
 query = SELECT maildir FROM mailbox, alias_domain
   WHERE alias_domain.alias_domain = '%d'
