@@ -21,6 +21,11 @@ if [ ! -f "/www/postfixadmin/config.local.php" ]; then
   cp /files/config.local.php /www/postfixadmin
 fi
 
+if [ ! -f "/www/postfixadmin/config.inc.php" ]; then
+  echo "It doesn't seem like the roundcubemail is configured, so copying the config file now"
+  cp /files/config.inc.php /www/roundcube/
+fi
+
 if [ ! -d "/var/log/nginx" ]; then
   mkdir -p /var/log/nginx
   chown www-data:www-data /var/log/nginx
@@ -50,6 +55,11 @@ sleep 7
 if [ ! -d "/var/lib/mysql/mail" ]; then
   echo "Mail database doesn't seem to exist, creating its user"
   mysql -e "CREATE DATABASE mail CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;GRANT ALL PRIVILEGES ON mail.* TO admin@localhost IDENTIFIED BY '${DB_PASSWORD}';FLUSH PRIVILEGES;"
+fi
+
+if [ ! -d "/var/lib/mysql/roundcube" ]; then
+  echo "Roundcube database doesn't seem to exist, creating its user"
+  mysql -e "CREATE DATABASE roundcube CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;GRANT ALL PRIVILEGES ON roundcube.* TO admin@localhost IDENTIFIED BY '${DB_PASSWORD}';FLUSH PRIVILEGES;"
 fi
 
 if [ ! -f "/data/ssl/mail.crt" -o ! -f "/data/ssl/mail.key" ]; then
@@ -86,6 +96,7 @@ service nginx start
 service postfix start
 service rsyslog start
 service spamassassin start
+service dovecot start
 service opendkim start
 if [ ! -f "/data/ssl/private/dh.param" ]; then
   echo "You didn't provide your own Diffie Hellman parameters, which is ok."

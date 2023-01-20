@@ -1,7 +1,5 @@
 FROM ubuntu:bionic
 
-LABEL maintainer="Andrey Mikhalchuk <andrey@mikhalchuk.com>"
-
 ENV DEBIAN_FRONTEND=noninteractive \
     VERSION_POSTFIXADMIN=3.3.8 \
     VERSION_DOVECOT=2.3.19.1
@@ -20,7 +18,9 @@ RUN apt-get upgrade && \
         procps \
         vim \
         less \
-        telnet
+        telnet \
+        nano \ 
+        wget
 
 RUN curl https://repo.dovecot.org/DOVECOT-REPO-GPG | apt-key add - && \
     echo "deb https://repo.dovecot.org/ce-${VERSION_DOVECOT}/ubuntu/$(lsb_release -cs) $(lsb_release -cs) main" | tee -a /etc/apt/sources.list.d/dovecot.list
@@ -48,6 +48,12 @@ RUN curl -L https://cytranet.dl.sourceforge.net/project/postfixadmin/postfixadmi
     mkdir /www/postfixadmin/templates_c && \
     chown www-data:www-data /www/postfixadmin/templates_c
 
+RUN wget https://github.com/roundcube/roundcubemail/releases/download/1.3.17/roundcubemail-1.3.17-complete.tar.gz && \
+    mkdir -p /www/roundcube/ && \
+    tar xzf roundcubemail-1.3.17-complete.tar.gz && \
+    mv roundcubemail-1.3.17/* /www/roundcube && \
+    chown -R www-data:www-data /www/roundcube
+
 RUN apt-get install -y \
         nginx \
         libfreetype6-dev \
@@ -55,6 +61,9 @@ RUN apt-get install -y \
         libmcrypt-dev \
         libpng-dev \
         libjpeg-dev \
+        php-xml \
+        php-intl \
+        php-zip \
         php-dev \
         php-fpm \
         php-pear \
@@ -65,7 +74,8 @@ RUN apt-get install -y \
         php-mbstring \
         php-imap \
         libgl-dev \
-        webp  && \
+        webp \
+        net-tools && \
      mkdir -p /run/php && \
      chown www-data:www-data /run/php
 
@@ -89,6 +99,6 @@ RUN chmod +x /start.sh
 # 993 - IMAP over SSL
 # 995 - POP3 over SSL
 VOLUME [ "/var/log/", "/var/vmail/", "/var/lib/mysql", "/data/ssl" ]
-EXPOSE 25 80 110 143 465 993 995
+EXPOSE 25 80 110 143 465 993 995 8092 2425
 
 CMD ["/start.sh"]
