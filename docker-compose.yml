@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  mailserver: 
+    container_name: mail-server-development
+    restart: unless-stopped
+    image: mrfzy00/livecom-mail-server:latest
+    ports:
+      - "25:25"
+      - "8090:80"
+      - "110:110"
+      - "143:143"
+      - "465:465"
+      - "993:993"
+      - "995:995"
+      - "2425:2425"
+      - "8092:8092"
+    environment:
+      - hostname=${hostname}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - SETUP_PASSWORD=${SETUP_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql/
+      - ./data/vmail/:/var/vmail/
+      - ./data/log/:/var/log

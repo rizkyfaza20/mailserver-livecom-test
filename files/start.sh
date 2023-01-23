@@ -96,8 +96,8 @@ service nginx start
 service postfix start
 service rsyslog start
 service spamassassin start
-service dovecot start
 service opendkim start
+/usr/sbin/dovecot -F
 if [ ! -f "/data/ssl/private/dh.param" ]; then
   echo "You didn't provide your own Diffie Hellman parameters, which is ok."
   echo "Generating the new parameters, this may take a long time but will only take place on the first image start (if you correctly mounted /data/ssl)"
@@ -105,4 +105,3 @@ if [ ! -f "/data/ssl/private/dh.param" ]; then
   openssl dhparam 4096 > /data/ssl/private/dh.param
   chown 0440 /data/ssl/private/dh.param
 fi
-/usr/sbin/dovecot -F

@@ -1,33 +1,21 @@
 <?php
 
-/*
- +-----------------------------------------------------------------------+
- | Local configuration for the Roundcube Webmail installation.           |
- |                                                                       |
- | This is a sample configuration file only containing the minimum       |
- | setup required for a functional installation. Copy more options       |
- | from defaults.inc.php to this file to override the defaults.          |
- |                                                                       |
- | This file is part of the Roundcube Webmail client                     |
- | Copyright (C) 2005-2013, The Roundcube Dev Team                       |
- |                                                                       |
- | Licensed under the GNU General Public License version 3 or            |
- | any later version with exceptions for skins & plugins.                |
- | See the README file for a full license statement.                     |
- +-----------------------------------------------------------------------+
-*/
+/* Local configuration for Roundcube Webmail */
 
-$config = array();
-
+// ----------------------------------
+// SQL DATABASE
+// ----------------------------------
 // Database connection string (DSN) for read+write operations
 // Format (compatible with PEAR MDB2): db_provider://user:password@host/database
-// Currently supported db_providers: mysql, pgsql, sqlite, mssql, sqlsrv, oracle
+// Currently supported db_providers: mysql, pgsql, sqlite, mssql or sqlsrv
 // For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
-// NOTE: for SQLite use absolute path (Linux): 'sqlite:////full/path/to/sqlite.db?mode=0646'
-//       or (Windows): 'sqlite:///C:/full/path/to/sqlite.db'
-$config['db_dsnw'] = 'mysql://root:Welcome1234@localhost/roundcubemail';
+// NOTE: for SQLite use absolute path: 'sqlite:////full/path/to/sqlite.db?mode=0646'
+$config['db_dsnw'] = 'mysql://admin:Welcome1234@localhost/roundcube';
 
-// The IMAP host chosen to perform the log-in.
+// ----------------------------------
+// IMAP
+// ----------------------------------
+// The mail host chosen to perform the log-in.
 // Leave blank to show a textbox at login, give a list of hosts
 // to display a pulldown menu or set one host as string.
 // To use SSL/TLS connection, enter hostname with prefix ssl:// or tls://
@@ -37,50 +25,53 @@ $config['db_dsnw'] = 'mysql://root:Welcome1234@localhost/roundcubemail';
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %s - domain name after the '@' from e-mail address provided at login screen
 // For example %n = mail.domain.tld, %t = domain.tld
+// WARNING: After hostname change update of mail_host column in users table is
+//          required to match old user data records with the new host.
 $config['default_host'] = 'localhost';
-
-// SMTP server host (for sending mails).
-// Enter hostname with prefix tls:// to use STARTTLS, or use
-// prefix ssl:// to use the deprecated SSL over SMTP (aka SMTPS)
-// Supported replacement variables:
-// %h - user's IMAP hostname
-// %n - hostname ($_SERVER['SERVER_NAME'])
-// %t - hostname without the first part
-// %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
-// %z - IMAP domain (IMAP hostname without the first part)
-// For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = 'localhost';
-
-// SMTP port (default is 25; use 587 for STARTTLS or 465 for the
-// deprecated SSL over SMTP (aka SMTPS))
-$config['smtp_port'] = 25;
-
-// SMTP username (if required) if you use %u as the username Roundcube
-// will use the current username for login
-$config['smtp_user'] = 'postfix-admin@mail.livecom-dev.com';
-
-// SMTP password (if required) if you use %p as the password Roundcube
-// will use the current user's password for login
-$config['smtp_pass'] = 'Welcome#1234';
 
 // provide an URL where a user can get support for this Roundcube installation
 // PLEASE DO NOT LINK TO THE ROUNDCUBE.NET WEBSITE HERE!
 $config['support_url'] = '';
 
-// Name your service. This is displayed on the login screen and in the window title
-$config['product_name'] = 'Roundcube Webmail';
-
 // this key is used to encrypt the users imap password which is stored
 // in the session record (and the client cookie if remember password is enabled).
 // please provide a string of exactly 24 chars.
-// YOUR KEY MUST BE DIFFERENT THAN THE SAMPLE VALUE FOR SECURITY REASONS
-$config['des_key'] = 'rcmail-!24ByteDESkey*Str';
+$config['des_key'] = '';
 
+// ----------------------------------
+// PLUGINS
+// ----------------------------------
 // List of active plugins (in plugins/ directory)
-$config['plugins'] = array(
-    'archive',
-    'zipdownload',
-);
+$config['plugins'] = array();
 
-// skin name: folder from skins/
-$config['skin'] = 'larry';
+// Set the spell checking engine. Possible values:
+// - 'googie'  - the default (also used for connecting to Nox Spell Server, see 'spellcheck_uri' setting)
+// - 'pspell'  - requires the PHP Pspell module and aspell installed
+// - 'enchant' - requires the PHP Enchant module
+// - 'atd'     - install your own After the Deadline server or check with the people at http://www.afterthedeadline.com before using their API
+// Since Google shut down their public spell checking service, the default settings
+// connect to http://spell.roundcube.net which is a hosted service provided by Roundcube.
+// You can connect to any other googie-compliant service by setting 'spellcheck_uri' accordingly.
+$config['spellcheck_engine'] = 'pspell';
+
+// store draft message is this mailbox
+// leave blank if draft messages should not be stored
+// NOTE: Use folder names with namespace prefix (INBOX. on Courier-IMAP)
+$config['drafts_mbox'] = 'Drafts';
+
+// store spam messages in this mailbox
+// NOTE: Use folder names with namespace prefix (INBOX. on Courier-IMAP)
+$config['junk_mbox'] = 'Junk';
+
+// store sent message is this mailbox
+// leave blank if sent messages should not be stored
+// NOTE: Use folder names with namespace prefix (INBOX. on Courier-IMAP)
+$config['sent_mbox'] = 'Sent';
+
+// move messages to this folder when deleting them
+// leave blank if they should be deleted directly
+// NOTE: Use folder names with namespace prefix (INBOX. on Courier-IMAP)
+$config['trash_mbox'] = 'Trash';
+
+// automatically create the above listed default folders on first login
+$config['create_default_folders'] = true;

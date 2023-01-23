@@ -39,6 +39,7 @@ RUN apt-get update && \
 
 RUN mkdir -p /data/spamassassin/log /www /data/ssl && \
     addgroup --gid 500 vmail && \
+    usermod -aG vmail www-data && \
     adduser vmail --uid 500 --gid 500 -q --home /var/vmail --disabled-password --gecos "" && \
     adduser spamd -q --disabled-login  --gecos ""
 
